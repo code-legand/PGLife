@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap5.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/common.css">
+    <!-- <link rel="stylesheet" href="css/home.css"> -->
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .b-example-divider {
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+    <title>Home | PG Life</title>
+</head>
+
+<body>
+    <!-- <nav style="background-color: white;" class="navbar navbar-expand-lg navbar fixed-top">
+        <div class="container-fluid p-0">
+          <a class="navbar-brand" href="index.html">
+            <img src="img/logo.png" alt="" width="100" height="40">
+          </a>
+          <div class="d-flex">
+            <div class="collapse navbar-collapse d-flex" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item d-flex">
+                  <i class="fas fa-user d-flex align-items-center px-2"></i>
+                  <a class="nav-link" aria-current="page" href="#">Sign Up</a>
+                </li>
+                <div class="d-flex mx-4 bg-dark" style="width: 1px;">
+                  <div class="vr w-4"></div>
+                </div>
+                <li class="nav-item mx-2 d-flex">
+                  <i class="fas fa-sign-in-alt d-flex align-items-center px-2"></i>
+                  <a class="nav-link" href="#">Log In</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav> -->
+    <nav class="navbar navbar-expand-lg bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img src="img/logo.png" alt="" width="100" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0 text-center">
+                    <li class="nav-item d-flex mx-auto">
+                        <i class="fas fa-user d-flex align-items-center px-2"></i>
+                        <a class="nav-link" aria-current="page" href="#">Sign Up</a>
+                    </li>
+                    <div class="d-flex mx-4 bg-dark d-none d-lg-block" style="width: 1px;">
+                        <div class="vr w-4"></div>
+                    </div>
+                    <li class="nav-item mx-2 d-flex mx-auto">
+                        <i class="fas fa-sign-in-alt d-flex align-items-center px-2"></i>
+                        <a class="nav-link" href="#">Log In</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-3 my-5 px-0 fixed-top" style="z-index: -1;">
+        <div id="home-banner" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active ">
+                    <!-- <div style="height: 500px; background-color: black; opacity: 0.4;"></div> -->
+                    <img src="img/bg.png" class="d-block w-100" alt="home banner">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="">
+        <div style="height: 40vw; background-color: rgba(0, 0, 0, .45)"
+            class="d-flex align-content-center justify-content-center flex-wrap mt-5">
+            <h3 class="h3 fw-normal text-center w-100 p-3 text-light">Happiness per Square Foot</h3>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-dark" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+    <div style="background-color: white;" class="pt-5">
+
+        <h1 class="h1 fw-normal text-center my-5">Major Cities</h1>
+        <div class="container-fluid p-5 mb-5">
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center">
+                    <a href="#">
+                        <div class="btn rounded-circle shadow m-3 d-flex align-items-center justify-content-center"
+                            style="width: 200px; height: 200px;"
+                            onmouseenter="this.className = this.className.replace('shadow', 'shadow-lg bg-light');"
+                            onmouseleave="this.className = this.className.replace('shadow-lg bg-light', 'shadow');">
+                            <img src="img/delhi.png" alt="delhi" style="width: 150px; height: 150px;" class="">
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center">
+                    <a href="#">
+                        <div class="rounded-circle shadow m-3 d-flex align-items-center justify-content-center"
+                            style="width: 200px; height: 200px;"
+                            onmouseenter="this.className = this.className.replace('shadow', 'shadow-lg bg-light');"
+                            onmouseleave="this.className = this.className.replace('shadow-lg bg-light', 'shadow');">
+                            <img src="img/mumbai.png" alt="mumbai" style="width: 150px; height: 150px;">
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center">
+                    <a href="#">
+                        <div class="rounded-circle shadow m-3 d-flex align-items-center justify-content-center"
+                            style="width: 200px; height: 200px;"
+                            onmouseenter="this.className = this.className.replace('shadow', 'shadow-lg bg-light');"
+                            onmouseleave="this.className = this.className.replace('shadow-lg bg-light', 'shadow');">
+                            <img src="img/bangalore.png" alt="bangalore" style="width: 150px; height: 150px;">
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 d-flex justify-content-center">
+                    <a href="#">
+                        <div class="rounded-circle shadow m-3 d-flex align-items-center justify-content-center"
+                            style="width: 200px; height: 200px;"
+                            onmouseenter="this.className = this.className.replace('shadow', 'shadow-lg bg-light');"
+                            onmouseleave="this.className = this.className.replace('shadow-lg bg-light', 'shadow');">
+                            <img src="img/hyderabad.png" alt="hyderabad" style="width: 150px; height: 150px;">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container-fluid m-0 bg-dark">
+            <footer class="py-3">
+                <div class="nav justify-content-center border-bottom pb-3 d-flex">
+                    <div class="nav-item"><a href="#" class="nav-link px-2 mx-4 text-light">PG in Delhi</a></div>
+                    <div class="nav-item"><a href="#" class="nav-link px-2 mx-4 text-light">PG in Mumbai</a></div>
+                    <div class="nav-item"><a href="#" class="nav-link px-2 mx-4 text-light">PG in Bangalore</a></div>
+                    <div class="nav-item"><a href="#" class="nav-link px-2 mx-4 text-light">PG in Hyderabad</a></div>
+                </div>
+                <p class="text-center text-muted pt-3">&copy; 2022 Copyright, PG Life</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- <script src="js/jquery.js"></script> -->
+    <script src="js/bootstrap5.min.js"></script>
+</body>
+
+</html>
