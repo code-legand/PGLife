@@ -1,81 +1,33 @@
+<?php
+    if(!isset($_SESSION["user_id"])){
+        $_SESSION["message"]="You need to login first!"
+        header("Location: index.php");
+        return;
+    }
+    
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
-    <link rel="stylesheet" href="css/bootstrap5.min.css">
-    <link href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="css/common.css">
+    <?php
+        require_once "include\head_link.php"
+    ?>
+
     <link rel="stylesheet" href="css/dashboard.css">
-
-
     <title>Dashboard | PG Life</title>
 </head>
 
 <body>
-
-    <!-- <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">
-                <img src="img/logo.png" alt="" width="100" height="40">
-              </a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          </button>
-          <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">  
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="navbar-text mx-2 d-flex my-auto">
-                    <span class="mx-2"><b>Hi, Aditya Sood</b></span>
-                </li>
-                <li class="nav-item d-flex">
-                    <i class="fas fa-user d-flex align-items-center px-2"></i>
-                    <a class="nav-link" aria-current="page" href="#">Dashboard</a>
-                  </li>
-                  <div class="d-flex mx-4 bg-dark" style="width: 1px;">
-                    <div class="vr w-4"></div>
-                  </div>
-                  <li class="nav-item mx-2 d-flex">
-                    <i class="fas fa-sign-out-alt d-flex align-items-center px-2"></i>
-                    <a class="nav-link" href="#">Log In</a>
-                  </li>
-            </ul> 
-          </div>
-        </div>
-      </nav> -->
-
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="index.php">
                 <img src="img/logo.png" alt="" width="100" height="40">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                <ul class="navbar-nav mb-2 mb-lg-0 text-center">
-                    <li class="navbar-text mx-lg-2 d-flex my-auto mx-auto">
-                        <span class="mx-2"><b>Hi, Aditya Sood</b></span>
-                    </li>
-                    <li class="nav-item d-flex mx-auto">
-                        <i class="fas fa-user d-flex align-items-center px-2"></i>
-                        <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
-                    </li>
-                    <div class="d-flex mx-4 bg-dark d-none d-lg-block" style="width: 1px;">
-                        <div class="vr w-4"></div>
-                    </div>
-                    <li class="nav-item mx-2 d-flex mx-auto">
-                        <i class="fas fa-sign-out-alt d-flex align-items-center px-2"></i>
-                        <a class="nav-link" href="#">Logout</a>
-                    </li>
-                </ul>
-            </div>
+            <?php
+                require_once "includes/header2.php"
+            ?>
         </div>
     </nav>
 
