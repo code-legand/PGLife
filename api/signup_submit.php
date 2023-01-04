@@ -1,4 +1,5 @@
 <?php
+    session_start();
     require_once "../includes/database_connect.php";
 
     $full_name = $_POST['full_name'];
