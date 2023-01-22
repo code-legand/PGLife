@@ -1,5 +1,44 @@
 <?php
     session_start();
+    require_once "includes/database_connect.php";
+    if(isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        $user_name = $_SESSION['user_name'];
+    }
+
+    if (isset($_GET['property_id'])) {
+        $property_id = $_GET['property_id'];
+
+        $property = mysqli_query($conn, "SELECT * FROM properties WHERE id = $property_id");
+        $property_info = mysqli_fetch_assoc($property);
+
+        $amenities_types = mysqli_query($conn, "SELECT type FROM amenities JOIN properties_amenities ON amenities.id = properties_amenities.amenity_id WHERE property_id = $property_id");
+        $amenities_types_list = array();
+        while($amenities_type = mysqli_fetch_assoc($amenities_types)) {
+            array_push($amenities_types_list, $amenities_type['type']);
+        }
+        $amenities_types_list = array_unique($amenities_types_list);
+        $amenities_name_list = array();
+        $amenities_icon_list = array();
+        foreach($amenities_types_list as $amenity_type) {
+            $amenities = mysqli_query($conn, "SELECT name, icon FROM amenities JOIN properties_amenities ON amenities.id = properties_amenities.amenity_id WHERE property_id = $property_id AND type = '$amenity_type'");
+            $amenities_list = array();
+            while($amenity = mysqli_fetch_assoc($amenities)) {
+                array_push($amenities_list, $amenity['name']);
+                $amenities_icon_list[$amenity['name']] = $amenity['icon'];
+            }
+
+            $amenities_name_list[$amenity_type] = $amenities_list;
+        }
+
+        $testimonials = mysqli_query($conn, "SELECT * FROM testimonials WHERE property_id = $property_id");
+        $testimonials_info = mysqli_fetch_all($testimonials, MYSQLI_ASSOC);
+
+        $interested_users = mysqli_query($conn, "SELECT * FROM interested_users_properties WHERE property_id = $property_id");
+        $interested_users_count = mysqli_num_rows($interested_users);
+        $interested_users_info = mysqli_fetch_assoc($interested_users);
+        
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,50 +51,44 @@
     <link href="css/property_detail.css" rel="stylesheet" />
 </head>
 
-<body>
-    <div class="header sticky-top">
-        <nav class="navbar navbar-expand-md navbar-light">
+<body style="display: flex; flex-direction: column; min-height: 100vh">
+    <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
             <a class="navbar-brand" href="index.php">
-                <img src="img/logo.png" />
+                <img src="img/logo.png" alt="" width="100" height="40">
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#my-navbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <?php
+                if(isset($_SESSION['user_id'])) {
+                    require_once "includes\header2.php";
+                }
+                else {
+                    require_once "includes\header1.php";
+                }
+            ?>
+        </div>
+    </nav>
 
-            <div class="collapse navbar-collapse justify-content-end" id="my-navbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-toggle="modal" data-target="#signup-modal">
-                            <i class="fas fa-user"></i>Signup
-                        </a>
-                    </li>
-                    <div class="nav-vl"></div>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-toggle="modal" data-target="#login-modal">
-                            <i class="fas fa-sign-in-alt"></i>Login
-                        </a>
-                    </li>
-                </ul>
-            </div>
+    <!-- Modal -->
+    <?php
+        require_once "includes/login_modal.php";
+        require_once "includes/signup_modal.php";
+    ?>
+
+    <div class="bg-light">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb py-1 px-3">
+                <li class="breadcrumb-item">
+                    <a href="index.php">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="property_list.php?city=<?= $_SESSION['city_name'] ?>"><?= $_SESSION['city_name'] ?></a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <?= $property_info['name'] ?>
+                </li>
+            </ol>
         </nav>
     </div>
-
-    <div id="loading">
-    </div>
-
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb py-2">
-            <li class="breadcrumb-item">
-                <a href="index.php">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a href="property_list.php">Mumbai</a>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-                Ganpati Paying Guest
-            </li>
-        </ol>
-    </nav>
 
     <div id="property-images" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
@@ -86,34 +119,55 @@
 
     <div class="property-summary page-container">
         <div class="row no-gutters justify-content-between">
-            <div class="star-container" title="4.8">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
+            <div class="star-container" title="<?= $total_rating ?>">
+                <?php
+                $total_rating = ($property_info['rating_clean'] + $property_info['rating_food'] + $property_info['rating_safety']) / 3;
+                $rating = round($total_rating, 1);
+                for ($i = 0; $i < 5; $i++) {
+                    if ($rating >= $i + 0.8) {
+                ?>
+                        <i class="fas fa-star"></i>
+                    <?php
+                    } elseif ($rating >= $i + 0.3) {
+                    ?>
+                        <i class="fas fa-star-half-alt"></i>
+                    <?php
+                    } else {
+                    ?>
+                        <i class="far fa-star"></i>
+                <?php
+                    }
+                }
+                ?>
             </div>
+            <!-- <div class="star-container" title="4.8">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div> -->
             <div class="interested-container">
                 <i class="is-interested-image far fa-heart"></i>
                 <div class="interested-text">
-                    <span class="interested-user-count">6</span> interested
+                    <span class="interested-user-count"><?= $interested_users_count ?></span> interested
                 </div>
             </div>
         </div>
         <div class="detail-container">
-            <div class="property-name">Ganpati Paying Guest</div>
-            <div class="property-address">Police Beat, Sainath Complex, Besides, SV Rd, Daulat Nagar, Borivali East, Mumbai - 400066</div>
+            <div class="property-name"><?= $property_info['name'] ?></div>
+            <div class="property-address"><?= $property_info['address'] ?></div>
             <div class="property-gender">
-                <img src="img/unisex.png" />
+                <img src="img/<?= $property_info['gender'] ?>.png" />
             </div>
         </div>
         <div class="row no-gutters">
             <div class="rent-container col-6">
-                <div class="rent">Rs 8,500/-</div>
+                <div class="rent">Rs <?= $property_info['rent'] ?>/-</div>
                 <div class="rent-unit">per month</div>
             </div>
             <div class="button-container col-6">
-                <a href="#" class="btn btn-primary">Book Now</a>
+                <a href="tel:+0000000000" class="btn btn-primary">Book Now</a>
             </div>
         </div>
     </div>
@@ -122,7 +176,21 @@
         <div class="page-container">
             <h1>Amenities</h1>
             <div class="row justify-content-between">
-                <div class="col-md-auto">
+                <?php
+                    foreach ($amenities_name_list as $amenities_type => $amenity_list) {
+                        echo '<div class="col-md-auto">';
+                        echo "<h1>$amenities_type</h1>";
+                        foreach ($amenity_list as $amenity) {
+                            echo "<div class='amenity-container'>
+                                <img src='img/amenities/$amenities_icon_list[$amenity].svg'>
+                                <span>$amenity</span>
+                            </div>";
+                        }
+                        echo "</div>";
+                    }
+                ?>
+
+                <!-- <div class="col-md-auto">
                     <h5>Building</h5>
                     <div class="amenity-container">
                         <img src="img/amenities/powerbackup.svg">
@@ -176,14 +244,14 @@
                         <img src="img/amenities/geyser.svg">
                         <span>Geyser</span>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 
     <div class="property-about page-container">
         <h1>About the Property</h1>
-        <p>Furnished studio apartment - share it with close friends! Located in posh area of Bijwasan in Delhi, this house is available for both boys and girls. Go for a private room or opt for a shared one and make it your own abode. Go out with your new friends - catch a movie at the nearest cinema hall or just chill in a cafe which is not even 2 kms away. Unwind with your flatmates after a long day at work/college. With a common living area and a shared kitchen, make your own FRIENDS moments. After all, there's always a Joey with unlimited supply of food. Remember, all it needs is one crazy story to convert a roomie into a BFF. What's nearby/Your New Neighborhood 4.0 Kms from Dwarka Sector- 21 Metro Station.</p>
+        <p><?= $property_info['description'] ?></p>
     </div>
 
     <div class="property-rating">
@@ -196,13 +264,33 @@
                             <i class="rating-criteria-icon fas fa-broom"></i>
                             <span class="rating-criteria-text">Cleanliness</span>
                         </div>
-                        <div class="rating-criteria-star-container col-6" title="4.3">
+                        <div class="rating-criteria-star-container" title="<?= $total_rating ?>">
+                            <?php
+                            $rating = $property_info['rating_clean'];
+                            for ($i = 0; $i < 5; $i++) {
+                                if ($rating >= $i + 0.8) {
+                            ?>
+                                    <i class="fas fa-star"></i>
+                                <?php
+                                } elseif ($rating >= $i + 0.3) {
+                                ?>
+                                    <i class="fas fa-star-half-alt"></i>
+                                <?php
+                                } else {
+                                ?>
+                                    <i class="far fa-star"></i>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </div>
+                        <!-- <div class="rating-criteria-star-container col-6" title="4.3">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star-half-alt"></i>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="rating-criteria row">
@@ -210,13 +298,33 @@
                             <i class="rating-criteria-icon fas fa-utensils"></i>
                             <span class="rating-criteria-text">Food Quality</span>
                         </div>
-                        <div class="rating-criteria-star-container col-6" title="3.4">
+                        <div class="rating-criteria-star-container" title="<?= $total_rating ?>">
+                            <?php
+                            $rating = $property_info['rating_food'];
+                            for ($i = 0; $i < 5; $i++) {
+                                if ($rating >= $i + 0.8) {
+                            ?>
+                                    <i class="fas fa-star"></i>
+                                <?php
+                                } elseif ($rating >= $i + 0.3) {
+                                ?>
+                                    <i class="fas fa-star-half-alt"></i>
+                                <?php
+                                } else {
+                                ?>
+                                    <i class="far fa-star"></i>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </div>
+                        <!-- <div class="rating-criteria-star-container col-6" title="3.4">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star-half-alt"></i>
                             <i class="far fa-star"></i>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="rating-criteria row">
@@ -224,26 +332,67 @@
                             <i class="rating-criteria-icon fa fa-lock"></i>
                             <span class="rating-criteria-text">Safety</span>
                         </div>
-                        <div class="rating-criteria-star-container col-6" title="4.8">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
+                        <div class="rating-criteria-star-container" title="<?= $total_rating ?>">
+                            <?php
+                            $rating = $property_info['rating_safety'];
+                            for ($i = 0; $i < 5; $i++) {
+                                if ($rating >= $i + 0.8) {
+                            ?>
+                                    <i class="fas fa-star"></i>
+                                <?php
+                                } elseif ($rating >= $i + 0.3) {
+                                ?>
+                                    <i class="fas fa-star-half-alt"></i>
+                                <?php
+                                } else {
+                                ?>
+                                    <i class="far fa-star"></i>
+                            <?php
+                                }
+                            }
+                            ?>
                         </div>
+                        <!-- <div class="rating-criteria-star-container col-6" title="4.8">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div> -->
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <div class="rating-circle">
                         <div class="total-rating">4.2</div>
-                        <div class="rating-circle-star-container">
+                        <div class="star-container" title="<?= $total_rating ?>">
+                            <?php
+                            $total_rating = ($property_info['rating_clean'] + $property_info['rating_food'] + $property_info['rating_safety']) / 3;
+                            $rating = round($total_rating, 1);
+                            for ($i = 0; $i < 5; $i++) {
+                                if ($rating >= $i + 0.8) {
+                            ?>
+                                    <i class="fas fa-star"></i>
+                                <?php
+                                } elseif ($rating >= $i + 0.3) {
+                                ?>
+                                    <i class="fas fa-star-half-alt"></i>
+                                <?php
+                                } else {
+                                ?>
+                                    <i class="far fa-star"></i>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </div>
+                        <!-- <div class="rating-circle-star-container">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="far fa-star"></i>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -252,7 +401,22 @@
 
     <div class="property-testimonials page-container">
         <h1>What people say</h1>
-        <div class="testimonial-block">
+        <?php
+            foreach($testimonials_info as $testimonial){
+                echo '<div class="testimonial-block">
+                        <div class="testimonial-image-container">
+                            <img class="testimonial-img" src="img/man.png">
+                        </div>
+                        <div class="testimonial-text">
+                            <i class="fa fa-quote-left" aria-hidden="true"></i>
+                            <p>'.$testimonial['content'].'</p>
+                        </div>
+                        <div class="testimonial-name">- '.$testimonial['user_name'].'</div>
+                    </div>';
+            }
+        ?>
+        
+        <!-- <div class="testimonial-block">
             <div class="testimonial-image-container">
                 <img class="testimonial-img" src="img/man.png">
             </div>
@@ -271,10 +435,10 @@
                 <p>You just have to arrive at the place, it's fully furnished and stocked with all basic amenities and services and even your friends are welcome.</p>
             </div>
             <div class="testimonial-name">- Karan Johar</div>
-        </div>
+        </div> -->
     </div>
 
-    <div class="modal fade" id="signup-modal" tabindex="-1" role="dialog" aria-labelledby="signup-heading" aria-hidden="true">
+    <!-- <div class="modal fade" id="signup-modal" tabindex="-1" role="dialog" aria-labelledby="signup-heading" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -401,12 +565,13 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+    <?php
+        
+    ?>
 
-    
-
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <!-- <script type="text/javascript" src="js/jquery.js"></script> -->
+    <script type="text/javascript" src="js/bootstrap5.min.js"></script>
 </body>
 
 </html>

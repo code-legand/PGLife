@@ -13,7 +13,7 @@
                             <i class="fas fa-user"></i>
                         </div>
                         <div class="col-10 p-0">    
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Email">
+                            <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp" placeholder="Email">
                         </div>
                     </div>
                     <div class="row pb-3">
@@ -21,7 +21,7 @@
                             <i class="fas fa-lock"></i>
                         </div>
                         <div class="col-10 p-0">    
-                            <input type="password" class="form-control" id="password" placeholder="Password">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                         </div>
                     </div>
                     <div class="row">
